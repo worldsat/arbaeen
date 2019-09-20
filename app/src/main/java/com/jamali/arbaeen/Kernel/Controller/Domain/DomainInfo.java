@@ -1,7 +1,7 @@
 package com.jamali.arbaeen.Kernel.Controller.Domain;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class DomainInfo extends BaseDomain {
     private String viewMode;

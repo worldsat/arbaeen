@@ -8,12 +8,16 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.FileProvider;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.jamali.arbaeen.R;
 
 import java.io.File;
 
@@ -39,8 +43,8 @@ public class SnakBarDownload {
 
         // Changing action button text color
         View sbView = snackbar.getView();
-        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
-        TextView action = sbView.findViewById(android.support.design.R.id.snackbar_action);
+        TextView textView = sbView.findViewById(R.id.snackbar_text);
+        TextView action = sbView.findViewById(R.id.snackbar_action);
         textView.setTextColor(Color.WHITE);
         action.setTextColor(Color.RED);
         Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/iransans_m.ttf");

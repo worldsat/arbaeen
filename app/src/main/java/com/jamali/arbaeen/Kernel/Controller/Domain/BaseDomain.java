@@ -1,9 +1,11 @@
 package com.jamali.arbaeen.Kernel.Controller.Domain;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import io.reactivex.annotations.NonNull;
+
 
 
 public class BaseDomain implements Serializable {

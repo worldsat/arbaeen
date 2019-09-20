@@ -6,9 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import com.jamali.arbaeen.Activity.LoginActivity;
+
 import com.jamali.arbaeen.Kernel.Controller.Bll.SettingsBll;
 import com.jamali.arbaeen.Kernel.Controller.Domain.ApiResponse;
 import com.jamali.arbaeen.Kernel.Controller.Domain.DomainInfo;
@@ -186,8 +187,8 @@ public class Controller {
                     count = jsonRootObject.getInt("Count");
 
                     if (jsonRootObject.getString("IsError").equals("true")) {
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        context.startActivity(intent);
+//                        Intent intent = new Intent(context, LoginActivity.class);
+//                        context.startActivity(intent);
                     }
 
                     JSONArray array = jsonRootObject.optJSONArray("Data");

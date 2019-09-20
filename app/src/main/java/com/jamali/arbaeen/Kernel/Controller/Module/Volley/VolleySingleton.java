@@ -2,7 +2,7 @@ package com.jamali.arbaeen.Kernel.Controller.Module.Volley;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
+
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,20 +31,20 @@ public class VolleySingleton {
         mCtx = context;
         mRequestQueue = getRequestQueue();
 
-        mImageLoader = new ImageLoader(mRequestQueue,
-                new ImageLoader.ImageCache() {
-                    private final LruCache<String, Bitmap> cache = new LruBitmapCache(mCtx);
-
-                    @Override
-                    public Bitmap getBitmap(String url) {
-                        return cache.get(url);
-                    }
-
-                    @Override
-                    public void putBitmap(String url, Bitmap bitmap) {
-                        cache.put(url, bitmap);
-                    }
-                });
+//        mImageLoader = new ImageLoader(mRequestQueue,
+//                new ImageLoader.ImageCache() {
+//                    private final LruCache<String, Bitmap> cache = new LruBitmapCache(mCtx);
+//
+//                    @Override
+//                    public Bitmap getBitmap(String url) {
+//                        return cache.get(url);
+//                    }
+//
+//                    @Override
+//                    public void putBitmap(String url, Bitmap bitmap) {
+//                        cache.put(url, bitmap);
+//                    }
+//                });
     }
 
     /**

@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.design.widget.Snackbar;
+
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.jamali.arbaeen.R;
 
 public class SnakBar {
     public void snakShow(Context context, String str) {
@@ -23,7 +26,7 @@ public class SnakBar {
 
         // Changing action button text color
         View sbView = snackbar.getView();
-        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = sbView.findViewById(R.id.snackbar_text);
         textView.setTextColor(Color.WHITE);
         Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/iransans_m.ttf");
         textView.setTypeface(font);

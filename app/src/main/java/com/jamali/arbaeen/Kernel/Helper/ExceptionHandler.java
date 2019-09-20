@@ -7,7 +7,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
-import com.jamali.arbaeen.Activity.MainActivity;
+
 import com.jamali.arbaeen.BuildConfig;
 
 import java.io.File;
@@ -81,8 +81,8 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
             writer.flush();
             writer.close();
 
-            Intent intent = new Intent(c, MainActivity.class);
-            c.startActivity(intent);
+//            Intent intent = new Intent(c, MainActivity.class);
+//            c.startActivity(intent);
             System.exit(0);
         } catch (Exception e) {
             Log.i("moh3n", "uncaughtException: " + e.toString());

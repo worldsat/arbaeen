@@ -2,12 +2,14 @@ package com.jamali.arbaeen.Kernel.Helper;
 
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jamali.arbaeen.Kernel.Controller.Domain.BaseDomain;
 import com.jamali.arbaeen.Kernel.Controller.Module.SnakBar.SnakBar;
