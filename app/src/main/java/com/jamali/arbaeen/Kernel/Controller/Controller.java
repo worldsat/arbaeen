@@ -4,12 +4,12 @@ package com.jamali.arbaeen.Kernel.Controller;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-
 import com.jamali.arbaeen.Kernel.Controller.Bll.SettingsBll;
 import com.jamali.arbaeen.Kernel.Controller.Domain.ApiResponse;
 import com.jamali.arbaeen.Kernel.Controller.Domain.DomainInfo;
@@ -20,6 +20,8 @@ import com.jamali.arbaeen.Kernel.Controller.Interface.CallbackGet;
 import com.jamali.arbaeen.Kernel.Controller.Interface.CallbackOperation;
 import com.jamali.arbaeen.Kernel.Controller.Module.SnakBar.SnakBar;
 import com.jamali.arbaeen.Kernel.Controller.Module.Volley.VolleyCall;
+import com.jamali.arbaeen.Kernel.Helper.DataBaseHelper;
+import com.jamali.arbaeen.Kernel.Helper.DateConverter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,7 +74,7 @@ public class Controller {
             if (isOnline) {
                 GetFromApi(domain, apiName, filter, take, skip, allData, callbackGet);
             } else {
-                // GetFromDatabase(tableName, filter, domain, callbackGet);
+                 GetFromDatabase(tableName, filter, domain, callbackGet);
 
             }
 
@@ -322,6 +324,126 @@ public class Controller {
 
             }
         });
+    }
+    private <T> void GetFromDatabase(String tableName, ArrayList<Filter> filters, Class domain, CallbackGet callbackGet) {
+        ArrayList<T> result = new ArrayList<>();
+        try {
+            StringBuilder filterStr = new StringBuilder();
+            filterStr.append(" where 1=1 ");
+            if (filters != null && filters.size() > 0) {
+                for (Filter filter : filters) {
+                    if (filter.getField().endsWith("Id")) {
+                        filterStr.append(String.format(" and %s like '%s' ", filter.getField(), filter.getValue()));
+                    } else if (filter.getField().endsWith("Date") || filter.getField().endsWith("DateTime")) {
+                        DateConverter converter = new DateConverter();
+                        if (filter.getValue().contains("-")) {
+                            String[] dates = filter.getValue().split("-");
+                            if (dates.length == 2) {
+                                String[] startDate = dates[0].split("/");
+
+                                int year = Integer.parseInt(startDate[0]);
+                                int month = Integer.parseInt(startDate[1]);
+                                int day = Integer.parseInt(startDate[2]);
+                                converter.persianToGregorian(year, month, day);
+                                String startDateEn =
+                                        String.format("%02d", converter.getYear()) +
+                                                "-" + String.format("%02d", converter.getMonth()) +
+                                                "-" + String.format("%02d", converter.getDay());
+
+
+                                String[] endDate = dates[1].split("/");
+
+                                converter.persianToGregorian(
+                                        Integer.parseInt(endDate[0]),
+                                        Integer.parseInt(endDate[1]),
+                                        Integer.parseInt(endDate[2])
+                                );
+                                String endDateEn =
+                                        String.format("%02d", converter.getYear()) +
+                                                "-" + String.format("%02d", converter.getMonth()) +
+                                                "-" + String.format("%02d", converter.getDay());
+
+                                filterStr.append(
+                                        String.format(" and (%s >= '%s' and %s <= '%s')",
+                                                filter.getField(),
+                                                startDateEn,
+                                                filter.getField(),
+                                                endDateEn)
+                                );
+                            }
+                        } else {
+                            String[] startDate = filter.getValue().split("/");
+
+                            converter.persianToGregorian(
+                                    Integer.parseInt(startDate[0]),
+                                    Integer.parseInt(startDate[1]),
+                                    Integer.parseInt(startDate[2])
+                            );
+
+
+                            String startDateEn =
+                                    String.format("%02d", converter.getYear()) +
+                                            "-" + String.format("%02d", converter.getMonth()) +
+                                            "-" + String.format("%02d", converter.getDay());
+
+
+                            filterStr.append(
+                                    String.format(" and (%s >= '%s' and %s <= '%s')",
+                                            filter.getField(),
+                                            startDateEn,
+                                            filter.getField(),
+                                            startDate)
+                            );
+
+                        }
+
+                    } else {
+                        filterStr.append(String.format(" and %s like '%%%s%%'", filter.getField(), filter.getValue()));
+                    }
+                }
+            }
+            String filterString = filterStr.toString();
+
+
+
+            DataBaseHelper dbHelper = new DataBaseHelper(context);
+            SQLiteDatabase database = dbHelper.openDataBase();
+
+            String query = "Select * from " + tableName + filterString;
+            Log.i("moh3n", "GetFromDatabase: "+query);
+            Cursor cursor = database.rawQuery(query, null);
+            int columnCount = cursor.getColumnCount();
+
+            Constructor constructor = domain.getConstructor();
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Object item = constructor.newInstance();
+                    for (int i = 0; i < columnCount; i++) {
+                        String columnName = cursor.getColumnName(i);
+                        Method setMethod = domain.getDeclaredMethod("set" + columnName, String.class);
+                        if (cursor.getString(i) == null) {
+                            setMethod.invoke(item,"null");
+                        } else {
+                            setMethod.invoke(item, cursor.getString(i));
+                        }
+                    }
+
+                    result.add((T) item);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            database.close();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        callbackGet.onSuccess(result, result.size());
     }
 
     public void OperationPostBodyApi(Context context, String Operation, String ApiAddress, Map<String, String> params, CallbackOperation callback) {

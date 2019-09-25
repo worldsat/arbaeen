@@ -44,4 +44,5 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     implementation 'org.apache.commons:commons-lang3:3.8.1'
     api 'com.google.guava:guava:27.0.1-android'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0-rc02'
 }
