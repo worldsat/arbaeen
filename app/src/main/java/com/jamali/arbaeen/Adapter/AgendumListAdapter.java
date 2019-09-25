@@ -34,7 +34,7 @@ public class AgendumListAdapter extends RecyclerView.Adapter<AgendumListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-
+        holder.title.setText(array_object.get(position).getSubject());
     }
 
     @Override

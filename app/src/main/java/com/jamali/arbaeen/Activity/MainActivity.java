@@ -29,29 +29,31 @@ public class MainActivity extends BaseActivity {
     }
 
     private void moveDB() {
-        String src =getCacheDir() + "/arbaeen.db";
+        String src = getCacheDir() + "/arbaeen.db";
         String des = getFilesDir().getParent() + "/databases/arbaeen.db";
+        File n = new File(des);
+        if (!n.exists()) {
+            File f = new File(getCacheDir() + "/arbaeen.db");
+            if (!f.exists()) try {
 
-        File f = new File(getCacheDir() + "/arbaeen.db");
-        if (!f.exists()) try {
-
-            InputStream is = getAssets().open("arbaeen.db");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
+                InputStream is = getAssets().open("arbaeen.db");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
 
 
-            FileOutputStream fos = new FileOutputStream(f);
-            fos.write(buffer);
-            fos.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            FileManager.copyFile(src, des);
-        } catch (IOException e) {
+                FileOutputStream fos = new FileOutputStream(f);
+                fos.write(buffer);
+                fos.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                FileManager.copyFile(src, des);
+            } catch (IOException e) {
 
+            }
         }
     }
 
