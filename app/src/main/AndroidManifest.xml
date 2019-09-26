@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.MiddleActivity"></activity>
+        <activity android:name=".Activity.AfterActivity"></activity>
+        <activity android:name=".Activity.BeforeActivity"></activity>
+        <activity android:name=".Activity.ShowMiddleActivity"></activity>
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

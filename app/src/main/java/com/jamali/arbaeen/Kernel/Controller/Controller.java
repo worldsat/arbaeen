@@ -55,7 +55,7 @@ public class Controller {
         isOnline = settingsBll.isOnline();
     }
 
-    public <T> void Get(Class domain, ArrayList<Filter> filter, int take, int skip, boolean allData, CallbackGet callbackGet) {
+    public <T> void Get(Class domain, ArrayList<Filter> filter, int List, int position, boolean allData, CallbackGet callbackGet) {
 
 
         try {
@@ -65,16 +65,22 @@ public class Controller {
             Object instance = constructor.newInstance();
             Class superClass = domain.getSuperclass();
 
-            Method getTableName = superClass.getDeclaredMethod("getTableName");
-            Method getApiAddress = superClass.getDeclaredMethod("getApiAddress");
+            Method getTableName;
+            String tableName;
+            if (List == 0) {
+                getTableName = superClass.getDeclaredMethod("getTableName");
+                tableName = (String) getTableName.invoke(instance);
+            } else {
+                tableName = String.valueOf(List) + "_" + String.valueOf(position);
+            }
 
-            String tableName = (String) getTableName.invoke(instance);
+            Method getApiAddress = superClass.getDeclaredMethod("getApiAddress");
             String apiName = (String) getApiAddress.invoke(instance);
 
             if (isOnline) {
-                GetFromApi(domain, apiName, filter, take, skip, allData, callbackGet);
+                GetFromApi(domain, apiName, filter, List, position, allData, callbackGet);
             } else {
-                 GetFromDatabase(tableName, filter, domain, callbackGet);
+                GetFromDatabase(tableName, filter, domain, callbackGet);
 
             }
 
@@ -325,6 +331,7 @@ public class Controller {
             }
         });
     }
+
     private <T> void GetFromDatabase(String tableName, ArrayList<Filter> filters, Class domain, CallbackGet callbackGet) {
         ArrayList<T> result = new ArrayList<>();
         try {
@@ -405,12 +412,11 @@ public class Controller {
             String filterString = filterStr.toString();
 
 
-
             DataBaseHelper dbHelper = new DataBaseHelper(context);
             SQLiteDatabase database = dbHelper.openDataBase();
 
-            String query = "Select * from " + tableName + filterString;
-            Log.i("moh3n", "GetFromDatabase: "+query);
+            String query = "Select * from '" + tableName +"'"+ filterString;
+            Log.i("moh3n", "GetFromDatabase: " + query);
             Cursor cursor = database.rawQuery(query, null);
             int columnCount = cursor.getColumnCount();
 
@@ -423,7 +429,7 @@ public class Controller {
                         String columnName = cursor.getColumnName(i);
                         Method setMethod = domain.getDeclaredMethod("set" + columnName, String.class);
                         if (cursor.getString(i) == null) {
-                            setMethod.invoke(item,"null");
+                            setMethod.invoke(item, "null");
                         } else {
                             setMethod.invoke(item, cursor.getString(i));
                         }

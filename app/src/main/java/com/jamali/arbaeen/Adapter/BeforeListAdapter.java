@@ -1,11 +1,13 @@
 package com.jamali.arbaeen.Adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jamali.arbaeen.Domain.MiddleList;
+import com.jamali.arbaeen.Activity.ShowMiddleActivity;
+import com.jamali.arbaeen.Domain.BeforeList;
 import com.jamali.arbaeen.R;
 
 import java.util.ArrayList;
@@ -13,11 +15,11 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AgendumListAdapter extends RecyclerView.Adapter<AgendumListAdapter.ViewHolder> {
+public class BeforeListAdapter extends RecyclerView.Adapter<BeforeListAdapter.ViewHolder> {
 
-    private final ArrayList<MiddleList> array_object;
+    private final ArrayList<BeforeList> array_object;
 
-    public AgendumListAdapter(ArrayList<MiddleList> result) {
+    public BeforeListAdapter(ArrayList<BeforeList> result) {
 
         this.array_object = result;
     }
@@ -34,7 +36,13 @@ public class AgendumListAdapter extends RecyclerView.Adapter<AgendumListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        holder.title.setText(array_object.get(position).getSubject());
+        holder.title.setText((position+1) + " " + array_object.get(position).getSubject());
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(holder.itemView.getContext(), ShowMiddleActivity.class);
+            intent.putExtra("Position", position+1);
+            intent.putExtra("List", 1);
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
